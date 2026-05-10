@@ -1,0 +1,277 @@
+{
+  "info": {
+    "_postman_id": "fintech-eva2-collection",
+    "name": "EVA2 - Fintech Solutions S.A. - Clients API",
+    "description": "Colección Postman para la Evaluación Sumativa N°2 - Desarrollo Backend.\nContiene todos los endpoints del CRUD de clientes más el endpoint de salud.\n\nBase URL: http://localhost:8080\nVersion: v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "client_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Health Check",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "health"]
+        },
+        "description": "Verifica que el servicio backend esté operativo.\n\nRespuesta esperada: 200 OK\n{\n  \"status\": \"online\",\n  \"version\": \"1.0.0\",\n  \"environment\": \"docker\"\n}"
+      },
+      "response": [
+        {
+          "name": "200 - Servicio online",
+          "status": "OK",
+          "code": 200,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"status\": \"online\",\n  \"version\": \"1.0.0\",\n  \"environment\": \"docker\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "02 - GET Listar todos los clientes",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/clients",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "clients"]
+        },
+        "description": "Retorna la lista completa de clientes registrados.\n\nRespuesta esperada: 200 OK con array de clientes."
+      },
+      "response": [
+        {
+          "name": "200 - Lista de clientes",
+          "status": "OK",
+          "code": 200,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"client_id\": 1,\n      \"first_name\": \"Juan\",\n      \"last_name\": \"Pérez\",\n      \"email\": \"juan.perez@example.com\",\n      \"phone_number\": \"+56912345678\",\n      \"date_of_birth\": \"1995-05-15\",\n      \"created_at\": \"2026-05-01T12:00:00.000000Z\",\n      \"updated_at\": \"2026-05-01T12:00:00.000000Z\"\n    }\n  ],\n  \"count\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "03 - POST Crear cliente (éxito)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept",       "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Pérez\",\n  \"email\": \"juan.perez@fintech.local\",\n  \"phone_number\": \"+56912345678\",\n  \"date_of_birth\": \"1995-05-15\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/clients",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "clients"]
+        },
+        "description": "Registra un nuevo cliente en la base de datos.\n\nRespuesta esperada: 201 Created con datos del cliente creado."
+      },
+      "response": [
+        {
+          "name": "201 - Cliente creado",
+          "status": "Created",
+          "code": 201,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": true,\n  \"message\": \"Cliente creado exitosamente\",\n  \"data\": {\n    \"client_id\": 1,\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Pérez\",\n    \"email\": \"juan.perez@fintech.local\",\n    \"phone_number\": \"+56912345678\",\n    \"date_of_birth\": \"1995-05-15\",\n    \"created_at\": \"2026-05-01T12:00:00.000000Z\",\n    \"updated_at\": \"2026-05-01T12:00:00.000000Z\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "04 - POST Crear cliente (email duplicado → 422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept",       "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Otro\",\n  \"last_name\": \"Usuario\",\n  \"email\": \"juan.perez@fintech.local\",\n  \"phone_number\": \"+56987654321\",\n  \"date_of_birth\": \"1990-01-01\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/clients",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "clients"]
+        },
+        "description": "Intenta crear un cliente con un email ya registrado.\n\nRespuesta esperada: 422 Unprocessable Entity con mensaje de error de validación."
+      },
+      "response": [
+        {
+          "name": "422 - Email duplicado",
+          "status": "Unprocessable Entity",
+          "code": 422,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": false,\n  \"message\": \"Error de validación\",\n  \"errors\": {\n    \"email\": [\n      \"Este email ya está registrado en el sistema\"\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "05 - POST Crear cliente (menor de edad → 422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept",       "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Pedro\",\n  \"last_name\": \"Menor\",\n  \"email\": \"pedro.menor@test.com\",\n  \"phone_number\": \"+56911111111\",\n  \"date_of_birth\": \"2015-03-20\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/clients",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "clients"]
+        },
+        "description": "Intenta crear un cliente menor de 18 años.\n\nRespuesta esperada: 422 con error en date_of_birth."
+      },
+      "response": [
+        {
+          "name": "422 - Menor de edad",
+          "status": "Unprocessable Entity",
+          "code": 422,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": false,\n  \"message\": \"Error de validación\",\n  \"errors\": {\n    \"date_of_birth\": [\n      \"El cliente debe ser mayor de 18 años\"\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "06 - GET Obtener cliente por ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/clients/{{client_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "clients", "{{client_id}}"]
+        },
+        "description": "Obtiene los datos de un cliente específico por su ID.\n\nCambia la variable {{client_id}} por el ID real.\nRespuesta esperada: 200 OK con datos del cliente."
+      },
+      "response": [
+        {
+          "name": "200 - Cliente encontrado",
+          "status": "OK",
+          "code": 200,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"client_id\": 1,\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Pérez\",\n    \"email\": \"juan.perez@fintech.local\",\n    \"phone_number\": \"+56912345678\",\n    \"date_of_birth\": \"1995-05-15\",\n    \"created_at\": \"2026-05-01T12:00:00.000000Z\",\n    \"updated_at\": \"2026-05-01T12:00:00.000000Z\"\n  }\n}"
+        },
+        {
+          "name": "404 - Cliente no encontrado",
+          "status": "Not Found",
+          "code": 404,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": false,\n  \"message\": \"Cliente no encontrado\",\n  \"error\": \"No existe un cliente con ID: 99999\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "07 - PUT Actualizar cliente",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept",       "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phone_number\": \"+56999999999\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/clients/{{client_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "clients", "{{client_id}}"]
+        },
+        "description": "Actualiza los datos de un cliente existente.\n\nSolo se actualizan los campos enviados en el body.\nRespuesta esperada: 200 OK con datos actualizados."
+      },
+      "response": [
+        {
+          "name": "200 - Cliente actualizado",
+          "status": "OK",
+          "code": 200,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": true,\n  \"message\": \"Cliente actualizado exitosamente\",\n  \"data\": {\n    \"client_id\": 1,\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Pérez\",\n    \"email\": \"juan.perez@fintech.local\",\n    \"phone_number\": \"+56999999999\",\n    \"date_of_birth\": \"1995-05-15\",\n    \"created_at\": \"2026-05-01T12:00:00.000000Z\",\n    \"updated_at\": \"2026-05-01T12:15:00.000000Z\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "08 - DELETE Eliminar cliente",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/clients/{{client_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "clients", "{{client_id}}"]
+        },
+        "description": "Elimina permanentemente un cliente de la base de datos.\n\nRespuesta esperada: 200 OK con mensaje de confirmación."
+      },
+      "response": [
+        {
+          "name": "200 - Cliente eliminado",
+          "status": "OK",
+          "code": 200,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": true,\n  \"message\": \"Cliente 'Juan Pérez' eliminado exitosamente\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "09 - GET Buscar clientes",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/clients/search?q=juan",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "clients", "search"],
+          "query": [{ "key": "q", "value": "juan" }]
+        },
+        "description": "Busca clientes por nombre, apellido o email.\n\nParámetro requerido: ?q=término\nRespuesta esperada: 200 OK con resultados que coincidan."
+      },
+      "response": [
+        {
+          "name": "200 - Resultados de búsqueda",
+          "status": "OK",
+          "code": 200,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"client_id\": 1,\n      \"first_name\": \"Juan\",\n      \"last_name\": \"Pérez\",\n      \"email\": \"juan.perez@fintech.local\",\n      \"phone_number\": \"+56912345678\",\n      \"date_of_birth\": \"1995-05-15\",\n      \"created_at\": \"2026-05-01T12:00:00.000000Z\",\n      \"updated_at\": \"2026-05-01T12:00:00.000000Z\"\n    }\n  ],\n  \"count\": 1,\n  \"query\": \"juan\"\n}"
+        },
+        {
+          "name": "400 - Sin parámetro de búsqueda",
+          "status": "Bad Request",
+          "code": 400,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": false,\n  \"message\": \"Debe proporcionar un término de búsqueda usando el parámetro \\\"q\\\"\"\n}"
+        }
+      ]
+    }
+  ]
+}

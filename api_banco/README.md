@@ -15,8 +15,7 @@
 
 ## 🔗 Repositorio GitHub
 
-[https://github.com/TU_USUARIO/TU_REPOSITORIO](https://github.com/TU_USUARIO/TU_REPOSITORIO)
-
+[https://github.com/Rfadusz/eva2_fadus_ricardo_project]
 ---
 
 ## 📁 Estructura del Proyecto
@@ -66,8 +65,8 @@ backend/
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
-cd TU_REPOSITORIO
+git clone https://github.com/Rfadusz/eva2_fadus_ricardo_project
+cd eva2_fadus_ricardo_project
 ```
 
 ### 2. Ingresar a la carpeta del proyecto Laravel

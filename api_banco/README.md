@@ -9,9 +9,7 @@
 
 | Nombre | Apellido |
 |--------|----------|
-| _(completar)_ | _(completar)_ |
-| _(completar)_ | _(completar)_ |
-| _(completar)_ | _(completar)_ |
+| _Ricardo_ | _Fadus_ |
 
 ---
 
